@@ -2,10 +2,11 @@
     "blueprints": {
         "Player": {
             "desc": "First person player",
-            "properties": [
-                "WorldTransform",
-                "Camera"
-            ]
+          "properties": [
+            "WorldTransform",
+            "Camera",
+            "TopDownCamConfig"
+          ]
         },
         "StaticEnvironment": {
             "desc": "Static environment object",

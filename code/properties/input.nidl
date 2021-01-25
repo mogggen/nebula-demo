@@ -1,13 +1,18 @@
 {
-    "namespace": "Demo",
-    "properties": {
-        "PlayerInput": {
-            "hasFocus": {
-                "_type_": "bool",
-                "_default_": false
-            },
-            "forward": "char",
-            "strafe": "char"
-        }
+  "namespace": "Demo",
+  "properties": {
+    "PlayerInput": {
+      "hasFocus": {
+        "_type_": "bool",
+        "_default_": false
+      },
+      "forward": "char",
+      "strafe": "char"
+    },
+    "TopDownCamConfig": {
+      "height": "float",
+      "yaw": "float",
+      "pitch": "float"
     }
+  }
 }

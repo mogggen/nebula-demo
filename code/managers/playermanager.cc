@@ -63,14 +63,23 @@ PlayerManager::OnActivate()
     Game::EntityCreateInfo playerCreateInfo;
     playerCreateInfo.templateId = Game::GetTemplateId("Player/player"_atm);
     playerCreateInfo.immediate = true;
+
+    struct TopDownCamConfig
+    {
+        float height;
+        float yaw;
+        float pitch;
+    };
+
     Singleton->playerEntity = Game::CreateEntity(playerCreateInfo);
 
     GraphicsFeature::Camera camera = Game::GetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm));
+    TopDownCamConfig topDownCamConfig = Game::GetProperty<TopDownCamConfig>(Singleton->playerEntity, Game::GetPropertyId("TopDownCamConfig"_atm)); //get player.json values for input.nidl
     camera.aspectRatio = (float)width / (float)height;
     camera.viewHandle = GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultViewHandle();
     Game::SetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm), camera);
 
-    Singleton->freeCamUtil.Setup({0, 2, -3}, {0,0,-1});
+    Singleton->topDownCam.Setup(Math::point(0, topDownCamConfig.height, 0), 0, -1, 0);
 
     GraphicsFeature::GraphicsFeatureUnit::Instance()->AddRenderUICallback([]()
     {
@@ -99,21 +108,21 @@ PlayerManager::OnBeginFrame()
     auto& io = ImGui::GetIO();
     if (!ImGui::GetIO().WantCaptureMouse)
     {
-        Singleton->freeCamUtil.SetForwardsKey(io.KeysDown[Input::Key::W]);
-        Singleton->freeCamUtil.SetBackwardsKey(io.KeysDown[Input::Key::S]);
-        Singleton->freeCamUtil.SetRightStrafeKey(io.KeysDown[Input::Key::D]);
-        Singleton->freeCamUtil.SetLeftStrafeKey(io.KeysDown[Input::Key::A]);
-        Singleton->freeCamUtil.SetUpKey(io.KeysDown[Input::Key::Q]);
-        Singleton->freeCamUtil.SetDownKey(io.KeysDown[Input::Key::E]);
-        Singleton->freeCamUtil.SetMouseMovement({ -io.MouseDelta.x, -io.MouseDelta.y });
-        Singleton->freeCamUtil.SetAccelerateButton(io.KeyShift);
-        Singleton->freeCamUtil.SetRotateButton(io.MouseDown[Input::MouseButton::RightButton]);
-        Singleton->freeCamUtil.SetMovementSpeed(0.1f);
-        Singleton->freeCamUtil.Update();
+        Singleton->topDownCam.SetForwardsKey(io.KeysDown[Input::Key::W]);
+        Singleton->topDownCam.SetBackwardsKey(io.KeysDown[Input::Key::S]);
+        Singleton->topDownCam.SetRightStrafeKey(io.KeysDown[Input::Key::D]);
+        Singleton->topDownCam.SetLeftStrafeKey(io.KeysDown[Input::Key::A]);
+        Singleton->topDownCam.SetUpKey(io.KeysDown[Input::Key::Q]);
+        Singleton->topDownCam.SetDownKey(io.KeysDown[Input::Key::E]);
+        Singleton->topDownCam.SetMouseMovement({ -io.MouseDelta.x, -io.MouseDelta.y });
+        Singleton->topDownCam.SetAccelerateButton(io.KeyShift);
+        Singleton->topDownCam.SetRotateButton(io.MouseDown[Input::MouseButton::RightButton]);
+        Singleton->topDownCam.SetMovementSpeed(0.1f);
+        Singleton->topDownCam.Update();
     }
 
     //Math::mat4 worldTransform = Game::GetProperty(Singleton->playerEntity, Game::GetPropertyId("WorldTransform"_atm));
-    Game::SetProperty<Math::mat4>(Singleton->playerEntity, Game::GetPropertyId("WorldTransform"_atm), Math::inverse(Singleton->freeCamUtil.GetTransform()));
+    Game::SetProperty<Math::mat4>(Singleton->playerEntity, Game::GetPropertyId("WorldTransform"_atm), Singleton->topDownCam.GetTransform());
 }
 
 //------------------------------------------------------------------------------
