@@ -74,28 +74,18 @@ PlayerManager::OnActivate()
     Singleton->playerEntity = Game::CreateEntity(playerCreateInfo);
 
     GraphicsFeature::Camera camera = Game::GetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm));
-    TopDownCamConfig topDownCamConfig = Game::GetProperty<TopDownCamConfig>(Singleton->playerEntity, Game::GetPropertyId("TopDownCamConfig"_atm)); //get player.json values for input.nidl
+    TopDownCamConfig topDownCamConfig = Game::GetProperty<TopDownCamConfig>(Singleton->playerEntity, Game::GetPropertyId("TopDownCamConfig"_atm));
     camera.aspectRatio = (float)width / (float)height;
     camera.viewHandle = GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultViewHandle();
     Game::SetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm), camera);
 
-    Singleton->topDownCam.Setup(Math::point(0, topDownCamConfig.height, 0), 0, -1, 0);
+    Singleton->topDownCam.Setup(Math::point(0, 0, 0));
 
     GraphicsFeature::GraphicsFeatureUnit::Instance()->AddRenderUICallback([]()
     {
-        //static Math::line ray;
-        //if (Input::InputServer::Instance()->GetDefaultMouse()->ButtonPressed(Input::MouseButton::Code::RightButton))
-        //{
-        //    const Math::mat4 proj = Singleton->camera.GetProjectionMatrix();
-        //    ray = RenderUtil::MouseRayUtil::ComputeWorldMouseRay(
-        //        Input::InputServer::Instance()->GetDefaultMouse()->GetScreenPosition(),
-        //        1000.0f,
-        //        Math::inverse(Singleton->camera.view),
-        //        Math::inverse(proj),
-        //        0.1f
-        //    );
-        //}
-        //Im3d::Im3dContext::DrawLine(ray, 2.0f, { 1.0f, 0.3f, 0.0f, 1.0f });
+            ImGui::Begin("Camera Config");
+            ImGui::SliderFloat("height", Singleton->topDownCam.getHeigthPtr(), 0.001, 1000);
+            ImGui::End();
     });
 }
 

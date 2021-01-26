@@ -14,8 +14,8 @@ namespace RenderUtil
     */
     TopDownCamera::TopDownCamera() :
                     //x  y  z
-        defaultEyePos(0, 0, 0),
-        defaultEyeVec(0, 0, 1),
+        defaultEyePos(0, 8, 0),
+        defaultEyeVec(0, -1, 0),
         rotationSpeed(0.01f),
         moveSpeed(0.01f),
         cameraTransform(mat4()),
@@ -36,11 +36,10 @@ namespace RenderUtil
     /**
     */
     void
-        TopDownCamera::Setup(Math::point defaultEyePos, float height, float yaw, float pitch)
+        TopDownCamera::Setup(Math::point defaultEyePos)
     {
-        defaultEyePos.y = height; //set custom height from 1.2
         this->defaultEyePos = defaultEyePos;
-        this->defaultEyeVec = (0, -1, 0);
+        this->defaultEyeVec = (0, 0, 1);
         this->position = this->defaultEyePos;
         this->viewAngles.set(this->defaultEyeVec);
         this->Update();
@@ -51,7 +50,7 @@ namespace RenderUtil
     */
 
     //------------------------------------------------------------------------------
-    /**
+    /** PVM tranlaste Scale rotate
     */
     void
         TopDownCamera::Update()
@@ -62,10 +61,8 @@ namespace RenderUtil
             this->viewAngles.theta += this->mouseMovement.y * rotationSpeed;
         }
 
-        mat4 xMat = rotationx(this->viewAngles.theta - N_PI * .5f);
+        mat4 xMat = rotationx(this->viewAngles.theta);
         mat4 yMat = rotationy(this->viewAngles.rho);
-        this->cameraTransform = xMat;
-        this->cameraTransform = this->cameraTransform * yMat;
 
         float currentMoveSpeed = moveSpeed;
         if (this->accelerateButton)
@@ -98,10 +95,16 @@ namespace RenderUtil
             translation.y -= currentMoveSpeed;
         }
 
-        //translation = this->cameraTransform * translation;
-        this->position += xyz(translation);
-
-        this->cameraTransform.position = point(this->position);
+        translation = rotationy(-this->viewAngles.rho) * -translation;
+        this->position.x += translation.x;
+        this->position.z += translation.z;
+        float temp = height;
+        float hypo = temp / Math::sin(this->viewAngles.theta);
+        if (this->viewAngles.theta > N_PI * 0.5F)
+            hypo = temp / Math::sin(N_PI * 0.5F);
+        else if (this->viewAngles.theta < .001)
+            hypo = temp / 0.001;
+        this->cameraTransform = Math::translation(this->position.vec) * yMat * xMat * Math::translation(0, 0, -hypo);
     }
 
 

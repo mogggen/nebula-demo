@@ -13,7 +13,7 @@ namespace RenderUtil
     public:
         TopDownCamera();
 
-        void Setup(Math::point Pos, float height, float yaw, float pitch);
+        void Setup(Math::point Pos);
         /// updates camera matrix
         void Update();
         /// gets camera transform
@@ -43,6 +43,9 @@ namespace RenderUtil
         /// sets the down movement key
         void SetDownKey(bool state);
 
+        float*
+            getHeigthPtr();
+
     private:
         Math::point defaultEyePos;
         Math::vector defaultEyeVec;
@@ -54,6 +57,8 @@ namespace RenderUtil
 
         float rotationSpeed;
         float moveSpeed;
+        
+        float height;
 
         bool rotateButton;
         bool accelerateButton;
@@ -84,6 +89,12 @@ namespace RenderUtil
         TopDownCamera::SetMouseMovement(Math::vec2 movement)
     {
         this->mouseMovement = movement;
+    }
+
+    inline float*
+        TopDownCamera::getHeigthPtr()
+    {
+        return &this->height;
     }
     inline void
         TopDownCamera::SetRotationSpeed(float speed)
