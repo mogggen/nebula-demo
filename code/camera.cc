@@ -55,55 +55,26 @@ namespace RenderUtil
     void
         TopDownCamera::Update()
     {
-        if (this->rotateButton)
-        {
-            this->viewAngles.rho += this->mouseMovement.x * rotationSpeed;
-            this->viewAngles.theta += this->mouseMovement.y * rotationSpeed;
-        }
-
-        mat4 xMat = rotationx(this->viewAngles.theta);
-        mat4 yMat = rotationy(this->viewAngles.rho);
+        mat4 xMat = rotationx(pitch);
+        mat4 yMat = rotationy(yaw);
 
         float currentMoveSpeed = moveSpeed;
         if (this->accelerateButton)
         {
-            currentMoveSpeed *= 20;
+            currentMoveSpeed *= 10;
         }
-        vec4 translation = vec4(0, 0, 0, 0);
-        if (forwardsKey)
-        {
-            translation.z -= currentMoveSpeed;
-        }
-        if (backwardsKey)
-        {
-            translation.z += currentMoveSpeed;
-        }
-        if (rightStrafeKey)
-        {
-            translation.x += currentMoveSpeed;
-        }
-        if (leftStrafeKey)
-        {
-            translation.x -= currentMoveSpeed;
-        }
-        if (upKey)
-        {
-            translation.y += currentMoveSpeed;
-        }
-        if (downKey)
-        {
-            translation.y -= currentMoveSpeed;
-        }
+        vec4 translation = Math::normalize(vec4(
+            rightStrafeKey - leftStrafeKey,
+            0,
+            backwardsKey - forwardsKey, 0)) * currentMoveSpeed;        
 
-        translation = rotationy(-this->viewAngles.rho) * -translation;
+        translation = rotationy(-yaw) * -translation;
         this->position.x += translation.x;
         this->position.z += translation.z;
         float temp = height;
-        float hypo = temp / Math::sin(this->viewAngles.theta);
+        float hypo = temp / Math::sin(pitch);
         if (this->viewAngles.theta > N_PI * 0.5F)
             hypo = temp / Math::sin(N_PI * 0.5F);
-        else if (this->viewAngles.theta < .001)
-            hypo = temp / 0.001;
         this->cameraTransform = Math::translation(this->position.vec) * yMat * xMat * Math::translation(0, 0, -hypo);
     }
 

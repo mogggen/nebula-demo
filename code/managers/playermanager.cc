@@ -78,13 +78,14 @@ PlayerManager::OnActivate()
     camera.aspectRatio = (float)width / (float)height;
     camera.viewHandle = GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultViewHandle();
     Game::SetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm), camera);
-
     Singleton->topDownCam.Setup(Math::point(0, 0, 0));
 
     GraphicsFeature::GraphicsFeatureUnit::Instance()->AddRenderUICallback([]()
     {
             ImGui::Begin("Camera Config");
-            ImGui::SliderFloat("height", Singleton->topDownCam.getHeigthPtr(), 0.001, 1000);
+            ImGui::SliderFloat("height", Singleton->topDownCam.getHeigthPtr(), 3, 140);
+            ImGui::SliderFloat("pitch", Singleton->topDownCam.getPitchPtr(), 0.3, N_PI * .5F);
+            ImGui::SliderFloat("yaw", Singleton->topDownCam.getYawPtr(), 0, 2 * N_PI);
             ImGui::End();
     });
 }
@@ -102,13 +103,8 @@ PlayerManager::OnBeginFrame()
         Singleton->topDownCam.SetBackwardsKey(io.KeysDown[Input::Key::S]);
         Singleton->topDownCam.SetRightStrafeKey(io.KeysDown[Input::Key::D]);
         Singleton->topDownCam.SetLeftStrafeKey(io.KeysDown[Input::Key::A]);
-        Singleton->topDownCam.SetUpKey(io.KeysDown[Input::Key::Q]);
-        Singleton->topDownCam.SetDownKey(io.KeysDown[Input::Key::E]);
-        Singleton->topDownCam.SetMouseMovement({ -io.MouseDelta.x, -io.MouseDelta.y });
         Singleton->topDownCam.SetAccelerateButton(io.KeyShift);
-        Singleton->topDownCam.SetRotateButton(io.MouseDown[Input::MouseButton::RightButton]);
         Singleton->topDownCam.SetMovementSpeed(0.1f);
-        Singleton->topDownCam.Update();
     }
 
     //Math::mat4 worldTransform = Game::GetProperty(Singleton->playerEntity, Game::GetPropertyId("WorldTransform"_atm));
@@ -121,7 +117,7 @@ PlayerManager::OnBeginFrame()
 void
 PlayerManager::OnFrame()
 {
-    
+    Singleton->topDownCam.Update();
 }
 
 //------------------------------------------------------------------------------

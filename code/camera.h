@@ -43,8 +43,9 @@ namespace RenderUtil
         /// sets the down movement key
         void SetDownKey(bool state);
 
-        float*
-            getHeigthPtr();
+        float* getHeigthPtr();
+        float* getPitchPtr();
+        float* getYawPtr();
 
     private:
         Math::point defaultEyePos;
@@ -59,6 +60,8 @@ namespace RenderUtil
         float moveSpeed;
         
         float height;
+        float pitch;
+        float yaw;
 
         bool rotateButton;
         bool accelerateButton;
@@ -96,6 +99,19 @@ namespace RenderUtil
     {
         return &this->height;
     }
+
+    inline float*
+        TopDownCamera::getPitchPtr()
+    {
+        return &this->pitch;
+    }
+
+    inline float*
+        TopDownCamera::getYawPtr()
+    {
+        return &this->yaw;
+    }
+
     inline void
         TopDownCamera::SetRotationSpeed(float speed)
     {
