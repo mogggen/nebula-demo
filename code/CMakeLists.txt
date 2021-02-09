@@ -17,6 +17,8 @@ fips_dir(.)
         gamestatemanager.cc
 	camera.h
 	camera.cc
+	pythonbindings.h
+	pythonbindings.cc
     )
 
     fips_dir(managers)

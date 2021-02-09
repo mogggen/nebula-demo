@@ -27,12 +27,16 @@ public:
 
 	/// Destroy the singleton
 	static void Destroy();
-
+	Game::Entity getPlayer()
+	{
+		return playerEntity;
+	}
 private:
 	/// constructor
 	PlayerManager();
 	/// destructor
 	~PlayerManager();
+	
 
 	/// called when attached to game server.
 	static void OnActivate();
@@ -42,7 +46,7 @@ private:
 	static void OnFrame();
 
 	Game::Entity playerEntity;
-
+	
 	//RenderUtil::FreeCamUtil freeCamUtil;
 	RenderUtil::TopDownCamera topDownCam;
 };
