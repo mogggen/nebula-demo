@@ -64,21 +64,14 @@ PlayerManager::OnActivate()
     playerCreateInfo.templateId = Game::GetTemplateId("Player/player"_atm);
     playerCreateInfo.immediate = true;
 
-    struct TopDownCamConfig
-    {
-        float height;
-        float yaw;
-        float pitch;
-    };
-
     Singleton->playerEntity = Game::CreateEntity(playerCreateInfo);
 
     GraphicsFeature::Camera camera = Game::GetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm));
     TopDownCamConfig topDownCamConfig = Game::GetProperty<TopDownCamConfig>(Singleton->playerEntity, Game::GetPropertyId("TopDownCamConfig"_atm));
+    Singleton->topDownCam.Setup(topDownCamConfig.height, topDownCamConfig.pitch, topDownCamConfig.yaw);
     camera.aspectRatio = (float)width / (float)height;
     camera.viewHandle = GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultViewHandle();
     Game::SetProperty<GraphicsFeature::Camera>(Singleton->playerEntity, Game::GetPropertyId("Camera"_atm), camera);
-    Singleton->topDownCam.Setup(Math::point(0, 0, 0));
 
     GraphicsFeature::GraphicsFeatureUnit::Instance()->AddRenderUICallback([]()
     {

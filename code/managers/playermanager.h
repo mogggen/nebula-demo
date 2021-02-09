@@ -13,6 +13,7 @@
 #include "renderutil/freecamerautil.h"
 #include "camera.h"
 #include "game/entity.h"
+#include "properties/input.h"
 
 namespace Demo
 {

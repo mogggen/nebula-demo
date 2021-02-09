@@ -14,6 +14,7 @@ namespace RenderUtil
         TopDownCamera();
 
         void Setup(Math::point Pos);
+        void Setup(float height, float yaw, float pitch);
         /// updates camera matrix
         void Update();
         /// gets camera transform

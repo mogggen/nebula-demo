@@ -45,6 +45,19 @@ namespace RenderUtil
         this->Update();
     }
 
+    void
+        TopDownCamera::Setup(float height, float yaw, float pitch)
+    {
+        this->height = height;
+        this->pitch = pitch;
+        this->yaw = yaw;
+        this->defaultEyePos = defaultEyePos;
+        this->defaultEyeVec = (0, 0, 1);
+        this->position = this->defaultEyePos;
+        this->viewAngles.set(this->defaultEyeVec);
+        this->Update();
+    }
+
     //------------------------------------------------------------------------------
     /**
     */
