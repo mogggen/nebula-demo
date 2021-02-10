@@ -27,9 +27,10 @@ public:
 
 	/// Destroy the singleton
 	static void Destroy();
-	Game::Entity getPlayer()
+	inline Game::Entity getPlayer() { return playerEntity; }
+	inline void setPos(Math::point destination)
 	{
-		return playerEntity;
+		topDownCam.setDest(destination);
 	}
 private:
 	/// constructor

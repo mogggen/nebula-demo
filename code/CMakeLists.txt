@@ -1,4 +1,5 @@
 nebula_begin_app(nebula-demo windowed)
+fipsutil_copy(python_scripts.yml)
 
 fips_dir(.)
     add_blueprint(

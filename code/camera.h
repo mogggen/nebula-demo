@@ -13,8 +13,9 @@ namespace RenderUtil
     public:
         TopDownCamera();
 
-        void Setup(Math::point Pos);
+        void Setup(Math::point pos);
         void Setup(float height, float yaw, float pitch);
+        void setDest(Math::point pos);
         /// updates camera matrix
         void Update();
         /// gets camera transform
@@ -55,6 +56,7 @@ namespace RenderUtil
 
         Math::polar viewAngles;
         Math::point position;
+        Math::point destination;
         Math::mat4 cameraTransform;
 
         float rotationSpeed;
@@ -79,6 +81,13 @@ namespace RenderUtil
     {
         return this->cameraTransform;
     }
+
+    inline void
+        TopDownCamera::setDest(Math::point d)
+    {
+        this->destination = d;
+    }
+
     inline void
         TopDownCamera::SetRotateButton(bool state)
     {

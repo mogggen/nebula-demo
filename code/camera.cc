@@ -27,7 +27,6 @@ namespace RenderUtil
         rightStrafeKey(false),
         upKey(false),
         downKey(false)
-
     {
         // empty
     }
@@ -70,24 +69,38 @@ namespace RenderUtil
     {
         mat4 xMat = rotationx(pitch);
         mat4 yMat = rotationy(yaw);
-
+        float temp;
+        float hypo;
         float currentMoveSpeed = moveSpeed;
         if (this->accelerateButton)
         {
             currentMoveSpeed *= 10;
         }
+
         vec4 translation = Math::normalize(vec4(
             rightStrafeKey - leftStrafeKey,
             0,
-            backwardsKey - forwardsKey, 0)) * currentMoveSpeed;        
+            backwardsKey - forwardsKey, 0)) * currentMoveSpeed;
 
         translation = rotationy(-yaw) * -translation;
         this->position.x += translation.x;
         this->position.z += translation.z;
-        float temp = height;
-        float hypo = temp / Math::sin(pitch);
+
+
+        temp = height;
+        hypo = temp / Math::sin(pitch);
         if (this->viewAngles.theta > N_PI * 0.5F)
             hypo = temp / Math::sin(N_PI * 0.5F);
+
+        if (Math::abs(Math::length3(destination - position)) > 0.5f)
+        {
+            position = position + Math::point(
+                Math::vec4((destination - position) * 0.05));
+        }
+        else
+        {
+            destination = position;
+        }
         this->cameraTransform = Math::translation(this->position.vec) * yMat * xMat * Math::translation(0, 0, -hypo);
     }
 

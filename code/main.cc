@@ -67,6 +67,7 @@ private:
         this->editorFeatureUnit = EditorFeature::EditorFeatureUnit::Create();
         this->gameServer->AttachGameFeature(this->editorFeatureUnit);
 #endif
+        Scripting::ScriptServer::Instance()->EvalFile("Scripts/bootstrap.py");
 	}
 	/// cleanup game features
 	void CleanupGameFeatures()

@@ -17,7 +17,7 @@ namespace Python
 {
     namespace py = pybind11;
 
-    PYBIND11_EMBEDDED_MODULE(consoleControl, m)
+    PYBIND11_EMBEDDED_MODULE(con, m)
     {
         m.def("spawnCube", [](Math::point& p)
             {
@@ -29,7 +29,7 @@ namespace Python
                 return entity;
             });
 
-        m.def("zoomCamera", [](float fov)
+        m.def("camZoom", [](float fov)
             {
                 auto player = PlayerManager::Instance()->getPlayer();
                 GraphicsFeature::Camera camera = Game::GetProperty<GraphicsFeature::Camera>(player, Game::GetPropertyId("Camera"_atm));
@@ -38,9 +38,9 @@ namespace Python
                 Game::SetProperty(player, Game::GetPropertyId("Camera"_atm), camera);
             });
 
-        m.def("cameraPos", [](Math::point& p)
+        m.def("camPos", [](Math::point& p)
             {
-                Game::
+                Demo::PlayerManager::Instance()->setPos(p);
             });
     }
 } // namespace Python
